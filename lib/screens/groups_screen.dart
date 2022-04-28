@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:todo_list_app/models/group.dart';
 import 'package:todo_list_app/objectbox.g.dart';
@@ -12,11 +14,15 @@ class GroupsScreen extends StatefulWidget {
   State<GroupsScreen> createState() => _GroupsScreenState();
 }
 
-class _GroupsScreenState extends State<GroupsScreen> {
+class _GroupsScreenState extends State<GroupsScreen> with SingleTickerProviderStateMixin{
 
   final _groups = <Group>[];
   late final Store _store;
   late final Box<Group> _groupsBox;
+
+  late final AnimationController controller;
+  late final Animation<double> movingTop;
+  late final Animation rotation;
 
   Future<void> _addGroup() async {
     final result = await showDialog(
@@ -27,6 +33,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
     if(result != null && result is Group){
       _groupsBox.put(result);
       _loadGroups();
+      controller.reset();
+      controller.forward();
     }
   }
 
@@ -41,6 +49,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
     _store = await openStore();
     _groupsBox = _store.box<Group>();
     _loadGroups();
+    controller.forward();
   }
 
   Future<void> _goToTasks(Group group) async {
@@ -57,6 +66,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
   void initState() {
     _loadStore();
     super.initState();
+    controller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    rotation = Tween(begin: 0.0, end: 2 * pi).animate(
+      CurvedAnimation(parent: controller, curve: Curves.linear)
+    );
+    controller.forward();
   }
 
   @override
@@ -85,7 +99,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
             final group = _groups[index];
             return GroupItem(
               onTap: () => _goToTasks(group),
-              group: group
+              group: group,
+              controller: controller,
+              animation: rotation,
             );
           }
         ),
