@@ -33,125 +33,127 @@ class _AddGroupScreenState extends State<AddGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: EdgeInsets.zero,
-      insetPadding: EdgeInsets.zero,
-      content: SizedBox(
-        height: MediaQuery.of(context).size.height / 1.5,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Container(
-                color: selectedColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.group,
-                      size: 60,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: TextField(
-                        controller: textController,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: const InputDecoration(
-                          hintText: 'Group name',
-                          border: InputBorder.none
-                        ),
+    return SingleChildScrollView(
+      child: AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        insetPadding: EdgeInsets.zero,
+        content: SizedBox(
+          height: MediaQuery.of(context).size.height / 1.5,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Container(
+                  color: selectedColor,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.group,
+                        size: 60,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.white,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: 20.0,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          errorMessage ?? '',
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: TextField(
+                          controller: textController,
+                          textAlign: TextAlign.center,
                           style: const TextStyle(
-                            color: Colors.red
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: const InputDecoration(
+                            hintText: 'Group name',
+                            border: InputBorder.none
                           ),
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 15,
-                      ),
-                      child: Text('SELECT COLOR'),
-                    ),
-                    Expanded(
-                      child: GridView.builder(
-                        scrollDirection: Axis.horizontal,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ), 
-                        itemCount: Colors.primaries.length,
-                        itemBuilder: (context, index){
-                          final color = Colors.primaries[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15.0,
-                              vertical: 5.0,
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 20.0,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            errorMessage ?? '',
+                            style: const TextStyle(
+                              color: Colors.red
                             ),
-                            child: InkWell(
-                              onTap: (){
-                                setState(() {
-                                  selectedColor = color;
-                                });
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: color,
+                          ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15,
+                        ),
+                        child: Text('SELECT COLOR'),
+                      ),
+                      Expanded(
+                        child: GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ), 
+                          itemCount: Colors.primaries.length,
+                          itemBuilder: (context, index){
+                            final color = Colors.primaries[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 15.0,
+                                vertical: 5.0,
+                              ),
+                              child: InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    selectedColor = color;
+                                  });
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor: color,
+                                ),
+                              ),
+                            );
+                          }
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 15.0
+                        ),
+                        child: MaterialButton(
+                          color: Colors.deepPurple,
+                          child: const Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Text(
+                              'Create group',
+                              style: TextStyle(
+                                color: Colors.white
                               ),
                             ),
-                          );
-                        }
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 15.0
-                      ),
-                      child: MaterialButton(
-                        color: Colors.deepPurple,
-                        child: const Padding(
-                          padding: EdgeInsets.all(15.0),
-                          child: Text(
-                            'Create group',
-                            style: TextStyle(
-                              color: Colors.white
-                            ),
                           ),
+                          onPressed: _onSave,
                         ),
-                        onPressed: _onSave,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

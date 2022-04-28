@@ -38,6 +38,11 @@ class _GroupsScreenState extends State<GroupsScreen> with SingleTickerProviderSt
     }
   }
 
+  void _onDeleteGroup(Group group){
+    _store.box<Group>().remove(group.id);
+    _loadGroups();
+  }
+
   void _loadGroups(){
     _groups.clear();
     setState(() {
@@ -49,7 +54,6 @@ class _GroupsScreenState extends State<GroupsScreen> with SingleTickerProviderSt
     _store = await openStore();
     _groupsBox = _store.box<Group>();
     _loadGroups();
-    controller.forward();
   }
 
   Future<void> _goToTasks(Group group) async {
@@ -60,14 +64,16 @@ class _GroupsScreenState extends State<GroupsScreen> with SingleTickerProviderSt
     );
 
     _loadGroups();
+    controller.reset();
+    controller.forward();
   }
 
   @override
   void initState() {
     _loadStore();
     super.initState();
-    controller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    rotation = Tween(begin: 0.0, end: 2 * pi).animate(
+    controller = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    rotation = Tween(begin: 0.0, end:2 * pi).animate(
       CurvedAnimation(parent: controller, curve: Curves.linear)
     );
     controller.forward();
@@ -98,7 +104,8 @@ class _GroupsScreenState extends State<GroupsScreen> with SingleTickerProviderSt
           itemBuilder: (context, index){
             final group = _groups[index];
             return GroupItem(
-              onTap: () => _goToTasks(group),
+              viewTasks: () => _goToTasks(group),
+              deleteGroup: () => _onDeleteGroup(group),
               group: group,
               controller: controller,
               animation: rotation,

@@ -4,13 +4,15 @@ import 'package:todo_list_app/models/group.dart';
 class GroupItem extends StatefulWidget {
 
   final Group group;
-  final VoidCallback onTap;
+  final VoidCallback viewTasks;
+  final VoidCallback deleteGroup;
   final AnimationController controller;
   final Animation animation;
 
   GroupItem({
     required this.group,
-    required this.onTap,
+    required this.viewTasks,
+    required this.deleteGroup,
     required this.controller,
     required this.animation,
   });
@@ -30,33 +32,46 @@ class _GroupItemState extends State<GroupItem> {
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: InkWell(
-          onTap: widget.onTap,
+          onTap: widget.viewTasks,
           child: Container(
             decoration: BoxDecoration(
               color: Color(widget.group.color),
               borderRadius: const BorderRadius.all(Radius.circular(15.0))
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
+              alignment: AlignmentDirectional.center,
               children: [
-                Text(
-                  widget.group.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: IconButton(
+                    onPressed: widget.deleteGroup, 
+                    icon: const Icon(Icons.delete_forever, color: Colors.white,)
                   ),
                 ),
-                if(description.isNotEmpty) ...[
-                  const SizedBox(height: 10,),
-                  Text(
-                    description,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 17
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.group.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22
+                      ),
                     ),
-                  )
-                ]
-              ],
+                    if(description.isNotEmpty) ...[
+                      const SizedBox(height: 10,),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17
+                        ),
+                      )
+                    ]
+                  ],
+                ),
+              ]
             ),
           ),
         ),
